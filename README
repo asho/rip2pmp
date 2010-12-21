@@ -1,0 +1,5 @@
+    rip2pmp is a script front-end of mencoder. It's main goal is to 
+transcode films for some PMP devices (PSP, IPOD).
+
+    It is also capable to rip DVD iso(device) and subtitles. Please 
+executes "rip2pmp.sh" to know the usage.
