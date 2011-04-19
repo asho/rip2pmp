@@ -25,6 +25,9 @@
 #
 # ChangeLog:
 #
+# v.0.6.4:
+# Filename fix with THM file.
+#
 # v.0.6.3:
 # Bug fix with filename contains white space.
 #
@@ -138,7 +141,8 @@ do
 done
 
 test -z $OUTPUT && echo "no output file" && exit 1;
-THM_OUTPUT="\"`echo $OUTPUT | cut -d . -f 1`.THM\""
+OUTPUT_PREFIX="${OUTPUT::`expr ${#OUTPUT} - 4`}"
+THM_OUTPUT="${OUTPUT_PREFIX}.THM"
 OUTPUT=\"$OUTPUT\"
 
 if [ -z "$DVDROOT" ]; then
