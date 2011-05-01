@@ -24,6 +24,10 @@
 # Any comments, please mail to ashoyeh@gmail.com
 #
 # ChangeLog:
+# 
+# v.0.7:
+# Add normal h.264 file generation. (audio is by pass)
+# Remove "turbo" option in pass1.
 #
 # v.0.6.4:
 # Filename fix with THM file.
@@ -181,20 +185,27 @@ case $FORMAT in
 				BITRATE=1500
 			fi
 		fi
-	OVC_OPT=$OVC_OPT:bitrate=$BITRATE:threads=$THREADS
-	# grab a thumbnail
-	FFMPEG_CMD="$FFMPEG -y -i $OUTPUT -f image2 -ss 180 -vframes 1 -s 160x120 $THM_OUTPUT"
-	;;
+		OVC_OPT=$OVC_OPT:bitrate=$BITRATE:threads=$THREADS
+		# grab a thumbnail
+		FFMPEG_CMD="$FFMPEG -y -i $OUTPUT -f image2 -ss 180 -vframes 1 -s 160x120 $THM_OUTPUT"
+		;;
 	ipod) 
-	LAVF_OPT="-of lavf -lavfopts format=mp4"
-	if [ -z $BITRATE ]; then
-		BITRATE=400
-	fi
-	OVC_OPT=$OVC_OPT:bitrate=$BITRATE:threads=$THREADS
-	VF="-vf harddup,scale=480:320" # for ipod touch
-	;;
+		LAVF_OPT="-of lavf -lavfopts format=mp4"
+		if [ -z $BITRATE ]; then
+			BITRATE=400
+		fi
+		OVC_OPT=$OVC_OPT:bitrate=$BITRATE:threads=$THREADS
+		VF="-vf harddup,scale=480:320" # for ipod touch
+		;;
 	*)
-	;;
+		if [ -z $BITRATE ]; then
+			BITRATE=1500
+		fi
+		LAVF_OPT=""
+		OVC_OPT=$OVC_OPT:bitrate=$BITRATE:threads=$THREADS
+		OAC_OPT="-oac copy"
+		AF=""
+		;;
 esac
 
 echo "input file: $INPUT"
@@ -208,7 +219,7 @@ case $PASS in
 	2)
 	# FIXME:
 	# No need to do pass2
-	eval $MENCODER $OVC_OPT:pass=1:turbo=2 $OAC_OPT $LAVF_OPT $OFPS $INPUT \
+	eval $MENCODER $OVC_OPT:pass=1 $OAC_OPT $LAVF_OPT $OFPS $INPUT \
 		$VF $AF -o /dev/null $OPT $DVDROOT $TRACK
 	eval $MENCODER $OVC_OPT:pass=2 $OAC_OPT $LAVF_OPT $OFPS $VF $AF $INPUT \
 		-o $OUTPUT $OPT $DVDROOT $TRACK 
