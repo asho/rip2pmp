@@ -199,11 +199,12 @@ case $FORMAT in
 		;;
 	*)
 		if [ -z $BITRATE ]; then
-			BITRATE=1500
+			BITRATE=2000
 		fi
 		LAVF_OPT=""
 		OVC_OPT=$OVC_OPT:bitrate=$BITRATE:threads=$THREADS
-		OAC_OPT="-oac copy"
+		OAC_OPT="-oac faac -faacopts br=128"
+		#OAC_OPT="-oac copy"
 		AF=""
 		;;
 esac
