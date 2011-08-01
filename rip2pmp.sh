@@ -24,7 +24,10 @@
 # Any comments, please mail to ashoyeh@gmail.com
 #
 # ChangeLog:
-# 
+#
+# v.0.7.1:
+# Add "PESI" device support.
+#
 # v.0.7:
 # Add normal h.264 file generation. (audio is by pass)
 # Remove "turbo" option in pass1.
@@ -196,6 +199,15 @@ case $FORMAT in
 		fi
 		OVC_OPT=$OVC_OPT:bitrate=$BITRATE:threads=$THREADS
 		VF="-vf harddup,scale=480:320" # for ipod touch
+		;;
+	pesi)
+		LAVF_OPT="-of avi"
+		if [ -z $BITRATE ]; then
+			BITRATE=1000
+		fi
+		OVC_OPT="-ovc xvid -xvidencopts bitrate=$BITRATE"
+		OAC_OPT="-oac mp3lame -lameopts br=128"
+		VF="-vf harddup" 
 		;;
 	*)
 		if [ -z $BITRATE ]; then
